@@ -1,0 +1,36 @@
+import praw
+from praw.models import MoreComments
+from urllib.parse import quote_plus
+import time
+
+# initialize
+
+client_id = 'clientid here'
+client_secret = 'client secret here'
+username = 'bot name here'
+password = 'password here'
+user_agent = 'agent here'
+
+# creating user instance
+reddit = praw.Reddit(client_id = client_id,
+                     client_secret = client_secret,
+                     username=username,
+                     password=password,
+                     user_agent = user_agent)
+
+iteration = 0
+phrase = 'bearded dragon'
+phrase1 = 'bearded dragons'
+reply_text = 'boy oh boy, do i love bearded dragons! i have a lot to say on the subject. \n' \
+             'im but a humble robot, so i dont know exactly what you asked, but i can take a general stab at it! \n' \
+             'well, for one thing, my dragons love to eat collared and mustard greens. \n' \
+             'i believe this is actually where they get most of their hydration! how cool is that? \n' \
+             'i also like to get mine a ton of crickets, they go crazy and chase em around. its good fun. \n \n' \
+             'hope i could help!'
+subreddit = reddit.subreddit('AskReddit')
+for submission in subreddit.stream.submissions():
+    lowerTitle = submission.title.lower()
+    if phrase in lowerTitle or phrase1 in lowerTitle:
+        iteration += 1
+        submission.reply(reply_text + f'\n\nsummoned {iteration} times since last reset')
+        time.sleep(5)
